@@ -19,7 +19,7 @@ class Knight {
 	shortestPath(start, destination) {
 		if (!this.isWithinBoard(start[0], start[1])) return -1;
 
-		const queue = [{ start, path: [start] }];
+		const queue = [{ start, path: [start], moves: 0 }];
 		const visited = new Set();
 		const ROW = 0;
 		const COLUMN = 1;
@@ -27,10 +27,16 @@ class Knight {
 		visited.add(start.toString());
 
 		while (queue.length) {
-			const { start: currentPosition, path } = queue.shift();
+			const { start: currentPosition, path, moves } = queue.shift();
 			const [x, y] = currentPosition;
 
-			if (x === destination[ROW] && y === destination[COLUMN]) return path;
+			if (x === destination[ROW] && y === destination[COLUMN]) {
+				return `You made it in ${moves} moves! Here's your path: ${path.map(
+					(location) => {
+						return `[${location}]`;
+					},
+				)}`;
+			}
 
 			for (let i = 0; i < this.possibleMoves.length; i++) {
 				const updatedX = x + this.possibleMoves[i][ROW];
@@ -44,6 +50,7 @@ class Knight {
 					queue.push({
 						start: updatedPosition,
 						path: [...path, updatedPosition],
+						moves: moves + 1,
 					});
 					visited.add(updatedPosition.toString());
 				}
